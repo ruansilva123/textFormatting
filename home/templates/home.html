@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"rel="stylesheet"integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css"rel="stylesheet"/>
+    <title>Teste</title>
+  </head>
+
+  <body>
+    <div class="container">
+        <div id="editor">
+
+        </div>
+        <br>
+        <input type="button" class="btn btn-success" value="SEND" onclick="returnHtml()">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.js"></script>
+
+    <script> //recomendado que este arquivo seja externo
+
+        //CRIANDO A TOOL BAR (BARRA DE ESTILIZAÇÃO DO TEXTO)===============================================================================================
+        var toolbarOptions = [
+            ['bold','italic','underline','strike'],
+            ['blockquote', 'code-block'],
+
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'script': 'sub'}, { 'script': 'super' }],
+            [{ 'direction': 'rtl' }],
+
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+            [{ 'color': [] }, { 'background': [] }], //caso queira tirar ou colocar algum elemento, é necessário sinalizar no colchetes (vazio vem o padrão)
+            [{ 'font': [] }],
+            [{ 'align': [] }],
+            ['image'],
+
+            ['clean']     
+        ]
+
+        //CHAMANDO A TOOL BAR (BARRA DE ESTILIZAÇÃO DO TEXTO)===============================================================================================
+        var quill = new  Quill('#editor', {
+            modules: {
+                toolbar: {
+                    container: toolbarOptions,
+                    handlers: {
+                        image: urlImage
+                    }
+                }
+            },
+            placeholder: 'Digite seu texto',
+            theme: 'snow' //pode ser bubble também (ver qual mais se encaixa)
+        })
+
+        //VALIDANDO SOLICITAÇÃO HTTP DA IMAGEM=============================================================================================================
+        function verificaUrl (url){
+            fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar a URL');
+                }
+                
+                // Verifica o tipo de conteúdo retornado pela resposta
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.indexOf('image') !== -1) {
+                    // console.log('achou URL')
+                } else {
+                    console.log('URL Vazia')
+                }
+            })
+            .catch(error => {
+                if (mensage.includes('404')){
+                    console.log('Página não encontrada') //não presentou a mesagem de erro =============================
+                } else{
+                    console.error('Link não leva a uma imagem') //não presentou a mesagem de erro =============================
+                }
+            })
+        }
+
+        //INSERINDO IMAGEM POR LINK=========================================================================================================================
+        function urlImage(){
+            let selection = this.quill.getSelection()
+            let prompt = window.prompt('URL da imagem') //a alteração da janela de URL é feita aqui
+            
+            verificaUrl(prompt)
+            
+            this.quill.insertEmbed(selection.index, 'image', prompt)
+        }
+
+        function returnHtml(){
+            console.log(quill.root.innerHTML)
+            return quill.root.innerHTML
+        }
+
+    </script>
+  </body>
+</html>

@@ -1,3 +1,4 @@
 from django.db import models
 
-# Create your models here.
+class Texto(models.Model):
+    conteudo_texto = models.TextField()

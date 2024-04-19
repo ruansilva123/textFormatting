@@ -73,7 +73,7 @@
                 }
             })
             .catch(error => {
-                if (mensage.includes('404')){
+                if (mensage.includes('404')){  //erro no includes
                     console.log('Página não encontrada') //não presentou a mesagem de erro =============================
                 } else{
                     console.error('Link não leva a uma imagem') //não presentou a mesagem de erro =============================

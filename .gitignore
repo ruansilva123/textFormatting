@@ -1,0 +1,9 @@
+# PYTHON FILES
+__pycache__/
+
+# VIRTUAL MACHINE
+venv
+
+# SQLITE
+db.sqlite3
+database.sqlite3
